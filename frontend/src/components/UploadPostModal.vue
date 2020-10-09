@@ -1,45 +1,47 @@
 <template>
-  <div v-show="open" class="modal-container" @click="closeClick">
-    <transition name="fade">
-      <div v-show="open" class="modal-content" @click.stop>
-        <div>
-          <input
-            @change="onImageSelect"
-            hidden
-            type="file"
-            accept="image/*"
-            ref="fileInput"
-          />
-          <div
-            v-if="!selectedImage"
-            class="upload-box"
-            @click="fileInput && fileInput.click()"
-          >
-            <span>Select an image</span>
-          </div>
-          <div v-else>
-            <img class="selected-image" :src="selectedImage" />
-          </div>
+  <teleport to="#modal-container">
+    <div v-show="open" class="modal-container" @click="closeClick">
+      <transition name="fade">
+        <div v-show="open" class="modal-content" @click.stop>
           <div>
-            <span class="form-field-error" v-if="imageError">{{
-              imageError
-            }}</span>
+            <input
+              @change="onImageSelect"
+              hidden
+              type="file"
+              accept="image/*"
+              ref="fileInput"
+            />
+            <div
+              v-if="!selectedImage"
+              class="upload-box"
+              @click="fileInput && fileInput.click()"
+            >
+              <span>Select an image</span>
+            </div>
+            <div v-else>
+              <img class="selected-image" :src="selectedImage" />
+            </div>
+            <div>
+              <span class="form-field-error" v-if="imageError">{{
+                imageError
+              }}</span>
+            </div>
+          </div>
+          <div class="description-container">
+            <textarea
+              maxlength="200"
+              class="description"
+              v-model="description"
+              placeholder="Enter a description (optional)"
+            />
+          </div>
+          <div class="button-row">
+            <button @click="postClick">Post</button>
           </div>
         </div>
-        <div class="description-container">
-          <textarea
-            maxlength="200"
-            class="description"
-            v-model="description"
-            placeholder="Enter a description (optional)"
-          />
-        </div>
-        <div class="button-row">
-          <button @click="postClick">Post</button>
-        </div>
-      </div>
-    </transition>
-  </div>
+      </transition>
+    </div>
+  </teleport>
 </template>
 
 <script lang="ts">

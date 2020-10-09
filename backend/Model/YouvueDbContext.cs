@@ -20,7 +20,9 @@ namespace tradeus.Model
         public DbSet<UserFollowing> UserFollowings { get; set; }
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
-            optionsBuilder.UseSqlServer(@"Server=DESKTOP-662BOTM\SQLEXPRESS;Database=instaclone;Trusted_Connection=True;MultipleActiveResultSets=true");
+            // optionsBuilder.UseSqlServer(@"Server=DESKTOP-662BOTM\SQLEXPRESS;Database=instaclone;Trusted_Connection=True;MultipleActiveResultSets=true");
+            optionsBuilder.UseSqlServer(@"Server=DESKTOP-E1IM2SR;Database=instaclone;Trusted_Connection=True;MultipleActiveResultSets=true");
+
         }
     }
 }

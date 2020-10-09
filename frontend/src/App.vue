@@ -12,6 +12,7 @@ import Axios from "axios";
 import { UserDetails } from "./models/UserDetails";
 import { useRouter } from "vue-router";
 import TopNav from "@/components/TopNav.vue";
+import ModalContainer from "@/components/ModalContainer.vue";
 
 export default defineComponent({
   components: {

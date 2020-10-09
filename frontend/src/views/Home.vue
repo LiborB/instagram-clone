@@ -2,7 +2,11 @@
   <div class="home">
     <div class="card" v-for="post in postDetailList" :key="post.postId">
       <div class="card-title">
-        <router-link to="" class="bold">{{ post.creatorName }}</router-link>
+        <router-link
+          :to="`/user/${post.creatorName}`"
+          class="bold post-username"
+          >{{ post.creatorName }}
+        </router-link>
         <div><i class="fas fa-ellipsis-h"></i></div>
       </div>
       <div>
@@ -30,7 +34,9 @@
           <span>{{ post.description }}</span>
         </div>
         <div class="view-comments" v-if="post.numberOfComments > 0">
-          <span>View all {{ post.numberOfComments }} comments</span>
+          <span @click="viewMoreClick(post)"
+            >View all {{ post.numberOfComments }} comments</span
+          >
         </div>
         <div class="date-created">
           <span>{{ timeAgo(post.created) }}</span>
@@ -52,19 +58,28 @@
       </div>
     </div>
   </div>
+  <view-post-modal
+    @close="viewPostModalOpen = false"
+    :open="viewPostModalOpen"
+    :post-detail="selectedPost"
+  ></view-post-modal>
 </template>
 
 <script lang="ts">
-import { defineComponent, onBeforeMount } from "vue";
+import { defineComponent, onBeforeMount, ref } from "vue";
 import Axios, { AxiosResponse } from "axios";
 import PostDetail from "@/models/PostDetail";
 import { Globals } from "@/store";
 import { useAxios } from "@/main";
 import moment from "moment";
+import ViewPostModal from "@/components/ViewPostModal.vue";
 
 export default defineComponent({
   name: "Home",
+  components: { ViewPostModal },
   setup() {
+    const viewPostModalOpen = ref(false);
+    const selectedPost = ref<PostDetail>();
     onBeforeMount(() => {
       useAxios()
         .get<{}, AxiosResponse<PostDetail[]>>("posts/postlist", {
@@ -110,12 +125,20 @@ export default defineComponent({
 
     const timeAgo = (date: Date) => moment.utc(date).fromNow();
 
+    const viewMoreClick = (post: PostDetail) => {
+      selectedPost.value = post;
+      viewPostModalOpen.value = true;
+    };
+
     return {
       postDetailList: Globals.postDetailList,
       timeAgo,
       addComment,
       likePost,
-      unlikePost
+      unlikePost,
+      viewPostModalOpen,
+      selectedPost,
+      viewMoreClick
     };
   }
 });
@@ -129,6 +152,7 @@ export default defineComponent({
   outline: 1px solid #dbdbdb;
   font-size: 14px;
 }
+
 .home {
   display: flex;
   flex-direction: column;
@@ -147,13 +171,16 @@ export default defineComponent({
 
 .card-icons {
   margin-bottom: 5px;
+
   i {
     font-size: 24px;
     margin-right: 15px;
     cursor: pointer;
+
     &:hover {
       opacity: 0.6;
     }
+
     &.liked {
       color: red;
     }
@@ -170,6 +197,9 @@ export default defineComponent({
 
 .view-comments {
   color: rgb(142, 142, 142);
+  span {
+    cursor: pointer;
+  }
 }
 
 .date-created {
@@ -179,6 +209,7 @@ export default defineComponent({
   margin-top: 10px;
   margin-bottom: 10px;
 }
+
 .separator {
   border-bottom: 1px solid rgb(239, 239, 239);
   margin: 0 -10px;
@@ -188,6 +219,7 @@ export default defineComponent({
   display: flex;
   justify-content: space-between;
   padding: 10px 0 0 0;
+
   button {
     background-color: white;
     box-shadow: 0 0 2px cornflowerblue;
@@ -198,6 +230,7 @@ export default defineComponent({
     cursor: pointer;
     border: 1px solid cornflowerblue;
     margin-left: 10px;
+
     &.disabled {
       pointer-events: none;
       cursor: default !important;
@@ -205,9 +238,19 @@ export default defineComponent({
       opacity: 0.8;
     }
   }
+
   textarea {
     flex-grow: 1;
     resize: none;
+  }
+}
+
+.post-username {
+  color: inherit;
+  text-decoration: none;
+
+  &:hover {
+    text-decoration: underline;
   }
 }
 </style>
