@@ -4,6 +4,8 @@ import NavDirect from "./NavDirect";
 import NavHome from "./NavHome";
 import NavProfile from "./NavProfile";
 import "./NavIcon.scss";
+import {useSelector} from "react-redux";
+import {State} from "../../store/types";
 
 export type IconType = "home" | "activity" | "direct" | "profile";
 
@@ -13,7 +15,8 @@ interface Props extends React.HTMLAttributes<HTMLElement> {
 	selected: boolean;
 }
 function NavIcon(props: Props) {
-	if (props.type === "activity") {
+	const {isLoggedIn} = useSelector((state: State) => state)
+	if (props.type === "activity" && isLoggedIn) {
 		return <NavActivity className="nav-icon" {...props}></NavActivity>;
 	}
 	if (props.type === "home") {
@@ -22,7 +25,7 @@ function NavIcon(props: Props) {
 	if (props.type === "profile") {
 		return <NavProfile className="nav-icon" {...props}></NavProfile>;
 	}
-	if (props.type === "direct") {
+	if (props.type === "direct" && isLoggedIn) {
 		return <NavDirect className="nav-icon" {...props}></NavDirect>;
 	}
 	return <></>;
