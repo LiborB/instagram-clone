@@ -1,9 +1,7 @@
-import moment from "moment";
-
 export default class PostDetail {
     postId = 0;
     description = "";
-    creatorId = "";
+    creatorId = 0;
     creatorName = "";
     numberOfLikes = 0;
     created = new Date();

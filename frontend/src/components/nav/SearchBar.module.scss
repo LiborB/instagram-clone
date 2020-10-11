@@ -1,0 +1,22 @@
+@import "src/variables";
+
+.clearIcon {
+  display: none !important;
+}
+
+.searchInput {
+  padding-right: 5px !important;
+}
+
+.followIcon {
+  &:hover {
+    opacity: 0.6;
+  }
+}
+
+.numberOfFollowers {
+  font-size: 12px;
+  font-weight: bold;
+  //vertical-align: bottom;
+  color: $primary;
+}
