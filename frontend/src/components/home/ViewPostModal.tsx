@@ -13,6 +13,7 @@ import {Comment} from "../post/Comment";
 import useWindowDimensions from "../../hooks/useWindowDimensions";
 import {AddComment} from "../post/AddComment";
 import PerfectScrollBar from "react-perfect-scrollbar"
+import {StarBorderOutlined, StarOutlined} from "@material-ui/icons";
 
 
 const HeaderDivider = styled(Divider)`
@@ -31,6 +32,11 @@ margin-bottom: -10px;
 
 const CommentGridItem = styled(Grid)`
 line-height: 18px;
+`
+
+const FollowingText = styled.span`
+font-size: 14px;
+font-weight: 600;
 `
 
 interface Props extends DialogProps {
@@ -71,7 +77,7 @@ export function ViewPostModal(props: Props) {
     }
 
     return (
-        <PostDialog open={props.open} onClose={props.onClose} onEnter={onOpen} maxWidth="md" fullWidth>
+        <PostDialog open={props.open} onClose={props.onClose} onEnter={onOpen} maxWidth="lg" fullWidth>
             <Card style={{minHeight: "25vh"}}>
                 <GridContainer container spacing={1}>
                     <Grid container item xs={8} alignItems="center">
@@ -83,6 +89,7 @@ export function ViewPostModal(props: Props) {
                         <Grid item xs={12}>
                             <Box pt={1}>
                                 <Username username={props.postDetail.creatorName}/>
+                                <FollowingText> &#8226; Following</FollowingText>
                             </Box>
                         </Grid>
                         <Grid item xs={12}>
@@ -91,7 +98,7 @@ export function ViewPostModal(props: Props) {
                         <PerfectScrollBar style={{maxHeight: getMaxHeight()}}>
                             <CommentGridItem item xs={12}>
                                 {Boolean(props.postDetail.description) && <Grid item xs={12}>
-                                    <Box pb={2}>
+                                    <Box pb={1} style={{overflowWrap: "break-word"}}>
                                         <Username
                                             username={props.postDetail.creatorName}/>&nbsp;
                                         <CommentDescription>{props.postDetail.description}</CommentDescription>

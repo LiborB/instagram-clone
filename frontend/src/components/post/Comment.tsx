@@ -1,6 +1,6 @@
 // @flow
 import * as React from 'react';
-import {Grid, GridProps} from "@material-ui/core";
+import {Box, Grid, GridProps} from "@material-ui/core";
 import PostCommentDetail from "../../models/PostCommentDetail";
 import {Username} from "../user/Username";
 import {HeartIcon} from "./HeartIcon";
@@ -14,13 +14,18 @@ import {RootState} from "../../store/types";
 
 const CommentFooterContainer = styled.div`
 font-size: 12px;
-color: #828282;
-padding-bottom: 20px;
+color: #8e8e8e;
+padding-bottom: 10px;
 `
 
 const Likes = styled.span`
 font-weight: 600;
 padding-left: 10px;
+`
+
+const GridComment = styled(Grid)`
+overflow-wrap: break-word;
+padding-right: 10px;
 `
 
 interface Props extends GridProps {
@@ -46,13 +51,13 @@ export function Comment(props: Props) {
 
     return (
         <Grid {...slicedProps} container>
-            <Grid item xs={10}>
+            <GridComment item xs={11}>
                 <Username username={props.postCommentDetail.username}/>
 
                 <CommentDescription>&nbsp;{props.postCommentDetail.commentBody}</CommentDescription>
-            </Grid>
-            <Grid item xs={2}>
-                {!props.postCommentDetail.isSelfComment && <HeartIcon size="small" onClick={handleClick} isLiked={props.postCommentDetail.isLiked}/>}
+            </GridComment>
+            <Grid item xs={1}>
+                {!props.postCommentDetail.isSelfComment && <Box position="relative" top="10px"><HeartIcon size="small" onClick={handleClick} isLiked={props.postCommentDetail.isLiked}/></Box>}
 
             </Grid>
             <Grid item xs={12}>

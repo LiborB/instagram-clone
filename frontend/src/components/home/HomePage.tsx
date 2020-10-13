@@ -44,7 +44,7 @@ function HomePage() {
 
             </Grid>
             <Grid item xs={4}>
-                placehgolder stuff
+
             </Grid>
         </Grid>
     </Container>;

@@ -49,7 +49,8 @@ export function PostListItem(props: Props) {
 
     const UnfollowButton = () => {
         if (props.postDetail.creatorId !== currentUser.userId) {
-            return <Button onClick={unfollowClick} size="small" variant="text" className={classes.unfollowButton}>Unfollow</Button>
+            return <Button onClick={unfollowClick} size="small" variant="text"
+                           className={classes.unfollowButton}>Unfollow</Button>
         }
         return null;
     }
@@ -67,8 +68,7 @@ export function PostListItem(props: Props) {
     function handleLikeClick() {
         if (postDetail.isLiked) {
             unlikePost();
-        }
-        else {
+        } else {
             likePost();
         }
     }
@@ -119,7 +119,7 @@ export function PostListItem(props: Props) {
                 <img style={{width: "100%"}} src={props.postDetail.imageBase64}/>
             </Box>
             <Box pl={1} pr={1}>
-                <HeartIcon onClick={handleLikeClick} isLiked={postDetail.isLiked} />
+                <HeartIcon onClick={handleLikeClick} isLiked={postDetail.isLiked}/>
                 <ChatBubbleOutlineRounded className={classes.actionIcon}/>
                 <SendOutlined className={classes.actionIcon}/>
             </Box>
@@ -128,17 +128,20 @@ export function PostListItem(props: Props) {
                     {postDetail.numberOfLikes} {postDetail.numberOfLikes === 1 ? "like" : "likes"}
                 </div>}
             </Box>
-            <Box pl={1} pr={1} pt={1} fontSize="14px">
-                {postDetail.description && <div>
+            {postDetail.description &&
+            <Box pl={1} pr={1} pt={1} fontSize="14px" style={{overflowWrap: "break-word"}}>
+                <div>
                     <Username username={postDetail.creatorName}/>&nbsp;
                     <CommentDescription>{postDetail.description}</CommentDescription>
-                </div>}
-            </Box>
+                </div>
+            </Box>}
+            {Boolean(postDetail.numberOfComments) &&
             <Box pl={1} pr={1}>
-                {Boolean(postDetail.numberOfComments) && <div onClick={() => setOpen(true)} className={classes.moreComments}>
+                <div onClick={() => setOpen(true)} className={classes.moreComments}>
                     View all {postDetail.numberOfComments} comments
-                </div>}
+                </div>
             </Box>
+            }
             <Box pl={1} pr={1} pt={1}>
                 <div className={classes.timeAgo}>
                     <Moment fromNow utc>{postDetail.created}</Moment>
