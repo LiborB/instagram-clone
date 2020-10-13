@@ -7,11 +7,14 @@ import UserSearchItem from "../../models/UserSearchItem";
 import {PersonAddOutlined} from "@material-ui/icons";
 import {useHistory} from "react-router-dom";
 import {makeFriendly} from "../../utility/Helper";
+import {useDispatch} from "react-redux";
+import {SetPostUpdated} from "../../store/actions";
 
 function SearchBar() {
     const [loading, setLoading] = useState(false);
     const [options, setOptions] = useState([] as UserSearchItem[]);
     const history = useHistory()
+    const dispatch = useDispatch();
 
     function handleChange(value: string) {
         if (!value) {
@@ -43,6 +46,7 @@ function SearchBar() {
                 newOption.isFollowing = true;
             }
             setOptions(newOptions);
+            dispatch(SetPostUpdated(true));
         })
     }
 

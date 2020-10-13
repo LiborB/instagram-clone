@@ -5,4 +5,5 @@ export default class PostCommentDetail {
     created = new Date()
     numberOfLikes = 0
     isLiked = false;
+    isSelfComment = false;
 }

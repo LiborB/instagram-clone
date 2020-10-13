@@ -47,8 +47,43 @@ namespace tradeus.Controllers
                 CommentBody = x.CommentBody,
                 NumberOfLikes = x.CommentLikes.Count(),
                 IsLiked = x.CommentLikes.Any(x => x.UserId == user.UserId),
-                PostCommentId = x.PostCommentId
-            }).ToList();
+                PostCommentId = x.PostCommentId,
+                IsSelfComment = x.UserId == user.UserId
+            }).OrderByDescending(x => x.Created).ToList();
+        }
+
+        [Route("like/{postCommentId}")]
+        [HttpPost]
+        public IActionResult Like(int postCommentId)
+        {
+            var user = HandleTokenReturnUser();
+
+            if (!_context.CommentLikes.Any(x => x.PostCommentId == postCommentId && x.UserId == user.UserId))
+            {
+                _context.CommentLikes.Add(new CommentLike()
+                {
+                    Created = DateTime.UtcNow,
+                    UserId = user.UserId,
+                    PostCommentId = postCommentId
+                });
+                _context.SaveChanges();
+            }
+
+            return Ok();
+        }
+
+        [Route("unlike/{postCommentId}")]
+        [HttpPost]
+        public IActionResult Unlike(int postCommentId)
+        {
+            var user = HandleTokenReturnUser();
+
+            var commentLikes =
+                _context.CommentLikes.Where(x => x.PostCommentId == postCommentId && x.UserId == user.UserId);
+            _context.RemoveRange(commentLikes);
+
+            _context.SaveChanges();
+            return Ok();
         }
     }
 }

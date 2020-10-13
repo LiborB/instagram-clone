@@ -11,9 +11,9 @@ import {
 } from "@material-ui/core";
 import SearchBar from "./components/nav/SearchBar";
 import {Route, BrowserRouter, Switch, useHistory, useLocation} from "react-router-dom";
-import HomePage from "./components/home/Home";
-import Login from "./components/Login";
-import Signup from "./components/Signup";
+import HomePage from "./components/home/HomePage";
+import LoginPage from "./components/user/LoginPage";
+import SignupPage from "./components/user/SignupPage";
 import NavIcon, {IconType} from "./components/nav/NavIcon";
 import DirectPage from "./components/direct/DirectPage";
 import Axios from "axios";
@@ -22,6 +22,7 @@ import {useDispatch, useSelector} from "react-redux";
 import {SetCurrentUser} from "./store/actions";
 import {UploadPost} from "./components/nav/UploadPost";
 import {RootState, UserState} from "./store/types";
+import {UserPage} from "./components/user/UserPage";
 
 function App() {
     const router = useHistory();
@@ -76,22 +77,24 @@ function App() {
                     </Toolbar>
                 </AppBar>
             </div>
-            <div style={{paddingTop: 20}}>
+            <div style={{paddingTop: 20, backgroundColor: "#FAFAFA"}}>
                 <Switch>
                     <Route path="/home">
                         <HomePage></HomePage>
                     </Route>
                     <Route path="/login">
-                        <Login></Login>
+                        <LoginPage></LoginPage>
                     </Route>
                     <Route path="/signup">
-                        <Signup></Signup>
+                        <SignupPage></SignupPage>
                     </Route>
                     <Route path="/direct">
                         <DirectPage></DirectPage>
                     </Route>
+                    <Route path="/user/:username" render={(props) => <UserPage username={props.match.params.username}/>}>
+                    </Route>
                     <Route path="/">
-                        <Login></Login>
+                        <LoginPage></LoginPage>
                     </Route>
                 </Switch>
             </div>

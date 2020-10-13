@@ -8,18 +8,19 @@ import {
 import React, {useState} from "react";
 import {Link, useHistory} from "react-router-dom";
 import Axios from "axios";
-import {UserDetails} from "../models/UserDetails";
+import {UserDetails} from "../../models/UserDetails";
 import {useDispatch} from "react-redux";
-import {SetCurrentUser} from "../store/actions";
+import {SetCurrentUser} from "../../store/actions";
 
-function Login() {
+function LoginPage() {
     const [username, setUsername] = useState("");
     const [password, setPassword] = useState("");
     const [usernameError, setUsernameError] = useState("")
     const dispatch = useDispatch();
     const history = useHistory()
 
-    function loginClick() {
+    function loginClick(event: React.FormEvent<HTMLFormElement>) {
+        event.preventDefault();
         if (username && password) {
             Axios.post<UserDetails>("user/login", {
                 username, password
@@ -34,7 +35,7 @@ function Login() {
 
     return (
         <Container maxWidth="sm">
-            <form style={{textAlign: "center"}}>
+            <form style={{textAlign: "center"}} onSubmit={loginClick}>
                 <Typography variant="h5">Sign In</Typography>
                 <Grid container spacing={3}>
                     <Grid item xs={12}>
@@ -60,7 +61,7 @@ function Login() {
                     </Grid>
                     <Grid item xs={12}>
                         <Button
-                            onClick={loginClick}
+                            type="submit"
                             color="primary"
                             variant="contained"
                             disableElevation
@@ -80,4 +81,4 @@ function Login() {
     );
 }
 
-export default Login;
+export default LoginPage;

@@ -7,11 +7,11 @@ import {
 } from "@material-ui/core";
 import React, {useEffect, useRef, useState} from "react";
 import {Link, useHistory} from "react-router-dom";
-import "./Signup.module.scss";
+import "./SignupPage.module.scss";
 import Axios from "axios";
-import {UserDetails} from "../models/UserDetails";
+import {UserDetails} from "../../models/UserDetails";
 import {useDispatch} from "react-redux";
-import {SetCurrentUser} from "../store/actions";
+import {SetCurrentUser} from "../../store/actions";
 
 interface FormErrors {
     username: string,
@@ -19,7 +19,7 @@ interface FormErrors {
     confirmPassword: string
 }
 
-function Signup() {
+function SignupPage() {
     const [username, setUsername] = useState("");
     const [password, setPassword] = useState("");
     const [confirmPassword, setConfirmPassword] = useState("");
@@ -29,7 +29,8 @@ function Signup() {
     const dispatch = useDispatch();
     const history = useHistory()
 
-    function signupClick() {
+    function signupClick(event: React.FormEvent<HTMLFormElement>) {
+        event.preventDefault();
         usernameBlur()
         passwordBlur()
         confirmPasswordBlur()
@@ -74,7 +75,7 @@ function Signup() {
 
     return (
         <Container maxWidth="sm" className="signup-container">
-            <form style={{textAlign: "center"}}>
+            <form style={{textAlign: "center"}} onSubmit={signupClick}>
                 <Typography variant="h5">Sign Up</Typography>
                 <Grid container spacing={3}>
                     <Grid item xs={12}>
@@ -117,7 +118,7 @@ function Signup() {
                     </Grid>
                     <Grid item xs={12}>
                         <Button
-                            onClick={signupClick}
+                            type="submit"
                             color="primary"
                             variant="contained"
                             disableElevation
@@ -136,4 +137,4 @@ function Signup() {
     );
 }
 
-export default Signup;
+export default SignupPage;

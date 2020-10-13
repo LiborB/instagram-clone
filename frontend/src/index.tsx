@@ -9,7 +9,32 @@ import {combineReducers, createStore} from "redux";
 import {Provider} from "react-redux"
 import {createMuiTheme, ThemeProvider} from "@material-ui/core";
 import reducers from "./store/reducers";
+import moment from "moment"
+import ReactMoment from "react-moment"
+import 'react-perfect-scrollbar/dist/css/styles.css';
+moment.defineLocale("en-short", {
+    parentLocale: "en",
+    relativeTime: {
+        future: 'in %s',
+        past: '%s',
+        s:  'just now',
+        ss: 'just now',
+        m:  '1m',
+        mm: '%dm',
+        h:  '1h',
+        hh: '%dh',
+        d:  '1d',
+        dd: '%dd',
+        M:  '1 mnth',
+        MM: '%d mnths',
+        y:  '1y',
+        yy: '%dy'
+    }
+})
 
+moment.locale("en")
+
+ReactMoment.globalMoment = moment;
 Axios.defaults.baseURL = "https://localhost:44317/api/";
 const token = localStorage.getItem("token")
 if (token) {

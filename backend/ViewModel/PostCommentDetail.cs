@@ -10,5 +10,6 @@ namespace tradeus.ViewModel
         public DateTime Created { get; set; }
         public int NumberOfLikes { get; set; }
         public bool IsLiked { get; set; }
+        public bool IsSelfComment { get; set; }
     }
 }

@@ -2,20 +2,19 @@ import * as React from "react";
 import { useEffect, useState } from "react";
 import PostDetail from "../../models/PostDetail";
 import Axios from "axios";
-import { PostListItem } from "./PostListItem";
-import classes from "./Home.module.scss"
+import { PostListItem } from "../post/PostListItem";
+import classes from "./HomePage.module.scss"
 import {Container, Dialog, Grid} from "@material-ui/core";
 import {useSelector} from "react-redux";
 import {RootState} from "../../store/types";
 
-function Home() {
+function HomePage() {
     const [postDetails, setPostDetails] = useState([] as PostDetail[]);
     const {postUpdated} = useSelector((state: RootState) => state.postState);
     useEffect(() => {
         loadPosts();
     }, []);
     useEffect(() => {
-        console.log(postUpdated.updated)
         if (postUpdated.updated) {
             loadPosts();
         }
@@ -51,4 +50,4 @@ function Home() {
     </Container>;
 }
 
-export default Home;
+export default HomePage;

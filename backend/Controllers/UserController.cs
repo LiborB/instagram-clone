@@ -128,5 +128,16 @@ namespace tradeus.Controllers
             _context.SaveChanges();
             return Ok();
         }
+
+        [Route("unfollow")]
+        [HttpPost]
+        public IActionResult UnfollowUser(int userToUnfollowId)
+        {
+            var user = HandleTokenReturnUser();
+            var userFollowings = _context.UserFollowings.Where(x => x.FollowingId == userToUnfollowId && x.UserId == user.UserId);
+            _context.UserFollowings.RemoveRange(userFollowings);
+            _context.SaveChanges();
+            return Ok();
+        }
     }
 }
