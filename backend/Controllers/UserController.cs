@@ -139,5 +139,13 @@ namespace tradeus.Controllers
             _context.SaveChanges();
             return Ok();
         }
+
+        [Route("getprofileinfo/{username}")]
+        [HttpGet]
+        public ActionResult GetUserProfileInfo(string username)
+        {
+            var user = HandleTokenReturnUser();
+            return null;
+        }
     }
 }

@@ -19,7 +19,7 @@ interface Props {
 
 function NavProfile(props: Props) {
     const [anchorEl, setAnchorEl] = useState<null | HTMLElement>();
-    const {isLoggedIn} = useSelector((state: RootState) => state.userState);
+    const {isLoggedIn, currentUser} = useSelector((state: RootState) => state.userState);
     const history = useHistory();
     const dispatch = useDispatch();
 
@@ -43,10 +43,15 @@ function NavProfile(props: Props) {
         handleMenuItemClose();
     }
 
+    function profileClick() {
+        history.push(`/user/${currentUser.username}`)
+        handleMenuItemClose();
+    }
+
 
     function MenuItems() {
         if (isLoggedIn) {
-            return <><MenuItem onClick={handleMenuItemClose}>Profile</MenuItem>
+            return <><MenuItem onClick={profileClick}>Profile</MenuItem>
                 <MenuItem onClick={logoutClick}>Sign Out</MenuItem></>
         } else {
             return <MenuItem onClick={loginClick}>Log In</MenuItem>

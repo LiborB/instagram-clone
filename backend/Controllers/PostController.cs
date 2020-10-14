@@ -92,6 +92,30 @@ namespace tradeus.Controllers
             return Ok(postDetailsList);
         }
 
+        [Route("getpostdetail/{postId}")]
+        [HttpGet]
+        public ActionResult<PostDetail> GetPostDetail(int postId)
+        {
+            var user = HandleTokenReturnUser();
+            var post = _context.Posts.First(x => x.PostId == postId);
+            var dataFolder = Path.Combine(_hostingEnvironment.ContentRootPath, "Data");
+            var file = System.IO.File.ReadAllBytes(Path.Combine(dataFolder, post.FileName));
+            var postDetail = new PostDetail()
+            {
+                Created = post.Created,
+                Description = post.Description,
+                CreatorId = post.CreatorId,
+                CreatorName = post.Creator.Username,
+                PostId = post.PostId,
+                NumberOfComments = _context.PostComments.Count(comment => comment.PostId == post.PostId),
+                NumberOfLikes = _context.PostLikes.Count(like => like.PostId == post.PostId),
+                ImageBase64 = "data:image/" + Path.GetExtension(Path.Combine(dataFolder, post.FileName)).Replace(".","")
+                                            + ";base64," + Convert.ToBase64String(file),
+                IsLiked = _context.PostLikes.Any(like => like.PostId == post.PostId && like.UserId == user.UserId)
+            };
+            return Ok(postDetail);
+        }
+
         [Route("like/{postId}")]
         [HttpPost]
         public IActionResult LikePost(int postId)

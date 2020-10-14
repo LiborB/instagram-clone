@@ -1,7 +1,7 @@
 import React, {useEffect, useState} from "react";
 import "./App.scss";
 import {
-    AppBar,
+    AppBar, Box,
     Container,
     IconButton,
     Menu,
@@ -23,6 +23,7 @@ import {SetCurrentUser} from "./store/actions";
 import {UploadPost} from "./components/nav/UploadPost";
 import {RootState, UserState} from "./store/types";
 import {UserPage} from "./components/user/UserPage";
+import PerfectScrollBar from "react-perfect-scrollbar"
 
 function App() {
     const router = useHistory();
@@ -46,8 +47,8 @@ function App() {
     }, [dispatch, router])
 
     return (
-        <div>
-            <div>
+        <Box display="flex" flexDirection="column" height="100%">
+            <Box>
                 <AppBar position="static" color="default">
                     <Toolbar className="nav-toolbar">
                         <Typography
@@ -76,8 +77,8 @@ function App() {
                         </div>
                     </Toolbar>
                 </AppBar>
-            </div>
-            <div style={{paddingTop: 20, backgroundColor: "#FAFAFA"}}>
+            </Box>
+            <Box flexGrow="1" style={{paddingTop: 20, backgroundColor: "#FAFAFA"}}>
                 <Switch>
                     <Route path="/home">
                         <HomePage></HomePage>
@@ -91,14 +92,15 @@ function App() {
                     <Route path="/direct">
                         <DirectPage></DirectPage>
                     </Route>
-                    <Route path="/user/:username" render={(props) => <UserPage username={props.match.params.username}/>}>
+                    <Route path="/user/:username"
+                           render={(props) => <UserPage username={props.match.params.username}/>}>
                     </Route>
                     <Route path="/">
                         <LoginPage></LoginPage>
                     </Route>
                 </Switch>
-            </div>
-        </div>
+            </Box>
+        </Box>
     );
 }
 

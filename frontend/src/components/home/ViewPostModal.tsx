@@ -40,20 +40,41 @@ font-weight: 600;
 `
 
 interface Props extends DialogProps {
-    postDetail: PostDetail
+    postDetail?: PostDetail,
+    postId?: number
 };
 
 export function ViewPostModal(props: Props) {
     const [comments, setComments] = useState([] as PostCommentDetail[]);
     const [imageHeight, setImageHeight] = useState(0);
     const {width, height} = useWindowDimensions();
+    const [postDetail, setPostDetail] = useState(props.postDetail ?? new PostDetail())
+
+    useEffect(() => {
+        if (props.postDetail) {
+            setPostDetail(props.postDetail);
+        }
+    }, [props.postDetail])
 
     function onOpen() {
-        getCommentList();
+        if (props.postId) {
+            Axios.get<PostDetail>(`posts/getpostdetail/${props.postId}`).then(response => {
+                setPostDetail(response.data)
+                getCommentList();
+            })
+        }
+        else {
+            if (props.postDetail) {
+                setPostDetail(props.postDetail);
+                getCommentList();
+            }
+
+        }
+
     }
 
     function getCommentList() {
-        Axios.get<PostCommentDetail[]>(`comments/getcomments/${props.postDetail.postId}`).then(response => {
+        Axios.get<PostCommentDetail[]>(`comments/getcomments/${postDetail.postId}`).then(response => {
             setComments(response.data);
         })
     }
@@ -82,13 +103,13 @@ export function ViewPostModal(props: Props) {
                 <GridContainer container spacing={1}>
                     <Grid container item xs={8} alignItems="center">
                         <img onLoad={(value) => setImageHeight(value.currentTarget.offsetHeight)} width="100%"
-                             src={props.postDetail.imageBase64}/>
+                             src={postDetail.imageBase64}/>
 
                     </Grid>
                     <Grid item xs={4}>
                         <Grid item xs={12}>
                             <Box pt={1}>
-                                <Username username={props.postDetail.creatorName}/>
+                                <Username username={postDetail.creatorName}/>
                                 <FollowingText> &#8226; Following</FollowingText>
                             </Box>
                         </Grid>
@@ -97,11 +118,11 @@ export function ViewPostModal(props: Props) {
                         </Grid>
                         <PerfectScrollBar style={{maxHeight: getMaxHeight()}}>
                             <CommentGridItem item xs={12}>
-                                {Boolean(props.postDetail.description) && <Grid item xs={12}>
+                                {Boolean(postDetail.description) && <Grid item xs={12}>
                                     <Box pb={1} style={{overflowWrap: "break-word"}}>
                                         <Username
-                                            username={props.postDetail.creatorName}/>&nbsp;
-                                        <CommentDescription>{props.postDetail.description}</CommentDescription>
+                                            username={postDetail.creatorName}/>&nbsp;
+                                        <CommentDescription>{postDetail.description}</CommentDescription>
                                     </Box>
 
                                 </Grid>}
@@ -110,7 +131,7 @@ export function ViewPostModal(props: Props) {
                         </PerfectScrollBar>
 
                         <Grid item xs={12}>
-                            <AddComment postId={props.postDetail.postId} onCommentAdded={getCommentList}/>
+                            <AddComment postId={postDetail.postId} onCommentAdded={getCommentList}/>
                         </Grid>
                     </Grid>
                 </GridContainer>
