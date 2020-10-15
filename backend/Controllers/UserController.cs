@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using tradeus.Model;
@@ -14,7 +15,7 @@ namespace tradeus.Controllers
     [ApiController]
     public class UserController : BaseApiController
     {
-        public UserController(TradeusDbContext context) : base(context)
+        public UserController(TradeusDbContext context, IWebHostEnvironment env) : base(context, env)
         {
         }
 
@@ -99,19 +100,19 @@ namespace tradeus.Controllers
             var currentUser = HandleTokenReturnUser();
             var users = _context.Users.Where(x => x.Username.ToUpper().Contains(usernameQuery.ToUpper()));
             return Ok(users.ToList().Select(x =>
-                                  {
-                                      var numberOfFollowers = _context.UserFollowings.Count(v => v.FollowingId == x.UserId);
-                                      var isFollowing = x.UserId == currentUser.UserId ||
-                                                        _context.UserFollowings.Any(v =>
-                                                            v.FollowingId == x.UserId && v.UserId == currentUser.UserId);
-                                      return new UserSearchItem()
-                                      {
-                                          Username = x.Username,
-                                          UserId = x.UserId,
-                                          NumberOfFollowers = numberOfFollowers,
-                                          IsFollowing = isFollowing
-                                      };
-                                  }).ToList());
+            {
+                var numberOfFollowers = _context.UserFollowings.Count(v => v.FollowingId == x.UserId);
+                var isFollowing = x.UserId == currentUser.UserId ||
+                                  _context.UserFollowings.Any(v =>
+                                      v.FollowingId == x.UserId && v.UserId == currentUser.UserId);
+                return new UserSearchItem()
+                {
+                    Username = x.Username,
+                    UserId = x.UserId,
+                    NumberOfFollowers = numberOfFollowers,
+                    IsFollowing = isFollowing
+                };
+            }).ToList());
         }
 
         [Route("followuser")]
@@ -134,7 +135,8 @@ namespace tradeus.Controllers
         public IActionResult UnfollowUser(int userToUnfollowId)
         {
             var user = HandleTokenReturnUser();
-            var userFollowings = _context.UserFollowings.Where(x => x.FollowingId == userToUnfollowId && x.UserId == user.UserId);
+            var userFollowings =
+                _context.UserFollowings.Where(x => x.FollowingId == userToUnfollowId && x.UserId == user.UserId);
             _context.UserFollowings.RemoveRange(userFollowings);
             _context.SaveChanges();
             return Ok();
@@ -145,7 +147,24 @@ namespace tradeus.Controllers
         public ActionResult GetUserProfileInfo(string username)
         {
             var user = HandleTokenReturnUser();
-            return null;
+            var userProfileInfo = new UserProfileInfo();
+            var userEntity = _context.Users.First(x => x.Username == username);
+            var userPosts = _context.Posts.Where(x => x.CreatorId == userEntity.UserId).ToList();
+            userProfileInfo.Username = userEntity.Username;
+            userProfileInfo.postDetailSimples = userPosts
+                .Select(x => new PostDetailSimple()
+                {
+                    imageBase64 = GetBase64ImageFromPath(x.FileName),
+                    PostId = x.PostId
+                }).ToList();
+            userProfileInfo.NumberOfPosts = userPosts.Count;
+            userProfileInfo.NumberOfFollowers = _context.UserFollowings.Count(x => x.FollowingId == userEntity.UserId);
+            userProfileInfo.NumberOfFollowing = _context.UserFollowings.Count(x => x.UserId == userEntity.UserId);
+            userProfileInfo.IsFollowing = user.UserId == userEntity.UserId ||
+                                          _context.UserFollowings.Any(x =>
+                                              x.UserId == user.UserId && x.FollowingId == userEntity.UserId);
+            userProfileInfo.UserId = userEntity.UserId;
+            return Ok(userProfileInfo);
         }
     }
 }

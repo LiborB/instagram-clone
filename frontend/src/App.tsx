@@ -24,6 +24,11 @@ import {UploadPost} from "./components/nav/UploadPost";
 import {RootState, UserState} from "./store/types";
 import {UserPage} from "./components/user/UserPage";
 import PerfectScrollBar from "react-perfect-scrollbar"
+import styled from "styled-components";
+
+const NavBar = styled(AppBar)`
+background-color: white;
+`
 
 function App() {
     const router = useHistory();
@@ -49,7 +54,7 @@ function App() {
     return (
         <Box display="flex" flexDirection="column" height="100%">
             <Box>
-                <AppBar position="static" color="default">
+                <NavBar position="static" variant="outlined">
                     <Toolbar className="nav-toolbar">
                         <Typography
                             className="logo"
@@ -76,7 +81,7 @@ function App() {
                             />
                         </div>
                     </Toolbar>
-                </AppBar>
+                </NavBar>
             </Box>
             <Box flexGrow="1" style={{paddingTop: 20, backgroundColor: "#FAFAFA"}}>
                 <Switch>

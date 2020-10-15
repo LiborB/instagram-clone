@@ -50,8 +50,8 @@ function SearchBar() {
         })
     }
 
-    function optionClick(event: React.SyntheticEvent) {
-        history.push("/direct")
+    function optionClick(option: UserSearchItem) {
+        history.push(`/user/${option.username}`)
     }
 
     function NumberOfFollowers(option: UserSearchItem) {
@@ -83,7 +83,7 @@ function SearchBar() {
                         }}
                     />
                 )}
-                renderOption={(option) => <Grid container justify="space-between" alignItems="center" onClick={optionClick}>
+                renderOption={(option) => <Grid container justify="space-between" alignItems="center" onClick={() => optionClick(option)}>
                     <Grid item xs>
                         <div>
                             <span style={{fontWeight: 600, fontSize: 14}}>{option.username}</span>&#8239;

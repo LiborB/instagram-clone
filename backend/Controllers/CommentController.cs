@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
 using tradeus.Model;
 using tradeus.ViewModel;
@@ -11,7 +12,7 @@ namespace tradeus.Controllers
     [Route("api/comments")]
     public class CommentController : BaseApiController
     {
-        public CommentController(TradeusDbContext context) : base(context)
+        public CommentController(TradeusDbContext context, IWebHostEnvironment env) : base(context, env)
         {
         }
 

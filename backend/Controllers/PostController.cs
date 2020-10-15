@@ -16,9 +16,9 @@ namespace tradeus.Controllers
     {
         private IWebHostEnvironment _hostingEnvironment;
 
-        public PostController(TradeusDbContext context, IWebHostEnvironment hostEnvironment) : base(context)
+        public PostController(TradeusDbContext context, IWebHostEnvironment env) : base(context, env)
         {
-            _hostingEnvironment = hostEnvironment;
+            _hostingEnvironment = env;
         }
 
         [Route("upload")]
@@ -84,8 +84,7 @@ namespace tradeus.Controllers
                     PostId = x.PostId,
                     NumberOfComments = _context.PostComments.Count(comment => comment.PostId == x.PostId),
                     NumberOfLikes = _context.PostLikes.Count(like => like.PostId == x.PostId),
-                    ImageBase64 = "data:image/" + Path.GetExtension(Path.Combine(dataFolder, x.FileName)).Replace(".","")
-                                  + ";base64," + Convert.ToBase64String(file),
+                    ImageBase64 = GetBase64ImageFromPath(x.FileName),
                     IsLiked = _context.PostLikes.Any(like => like.PostId == x.PostId && like.UserId == user.UserId)
                 };
             });
