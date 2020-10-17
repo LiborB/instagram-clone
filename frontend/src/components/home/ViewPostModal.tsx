@@ -60,21 +60,20 @@ export function ViewPostModal(props: Props) {
         if (props.postId) {
             Axios.get<PostDetail>(`posts/getpostdetail/${props.postId}`).then(response => {
                 setPostDetail(response.data)
-                getCommentList();
             })
+            getCommentList(props.postId);
         }
         else {
             if (props.postDetail) {
                 setPostDetail(props.postDetail);
-                getCommentList();
+                getCommentList(props.postDetail.postId);
             }
 
         }
-
     }
 
-    function getCommentList() {
-        Axios.get<PostCommentDetail[]>(`comments/getcomments/${postDetail.postId}`).then(response => {
+    function getCommentList(postId: number) {
+        Axios.get<PostCommentDetail[]>(`comments/getcomments/${postId}`).then(response => {
             setComments(response.data);
         })
     }
@@ -131,7 +130,7 @@ export function ViewPostModal(props: Props) {
                         </PerfectScrollBar>
 
                         <Grid item xs={12}>
-                            <AddComment postId={postDetail.postId} onCommentAdded={getCommentList}/>
+                            <AddComment postId={postDetail.postId} onCommentAdded={() => getCommentList(postDetail.postId)}/>
                         </Grid>
                     </Grid>
                 </GridContainer>

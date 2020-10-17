@@ -154,8 +154,10 @@ namespace tradeus.Controllers
             userProfileInfo.postDetailSimples = userPosts
                 .Select(x => new PostDetailSimple()
                 {
-                    imageBase64 = GetBase64ImageFromPath(x.FileName),
-                    PostId = x.PostId
+                    ImageBase64 = GetBase64ImageFromPath(x.FileName),
+                    PostId = x.PostId,
+                    NumberOfComments = _context.PostComments.Count(comment => comment.PostId == x.PostId),
+                    NumberOfLikes = _context.PostLikes.Count(like => like.PostId == x.PostId)
                 }).ToList();
             userProfileInfo.NumberOfPosts = userPosts.Count;
             userProfileInfo.NumberOfFollowers = _context.UserFollowings.Count(x => x.FollowingId == userEntity.UserId);

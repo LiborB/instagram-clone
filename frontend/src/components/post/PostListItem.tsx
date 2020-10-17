@@ -20,7 +20,7 @@ import {
     FavoriteBorderOutlined,
     SendOutlined,
     FavoriteBorder,
-    Favorite
+    Favorite, QuestionAnswer, QuestionAnswerOutlined
 } from '@material-ui/icons';
 import {useEffect, useState} from "react";
 import Axios from "axios";
@@ -120,7 +120,7 @@ export function PostListItem(props: Props) {
             </Box>
             <Box pl={1} pr={1}>
                 <HeartIcon onClick={handleLikeClick} isLiked={postDetail.isLiked}/>
-                <ChatBubbleOutlineRounded className={classes.actionIcon}/>
+                <QuestionAnswerOutlined className={classes.actionIcon}/>
                 <SendOutlined className={classes.actionIcon}/>
             </Box>
             <Box pl={1} pr={1} fontWeight={600} fontSize={14}>
