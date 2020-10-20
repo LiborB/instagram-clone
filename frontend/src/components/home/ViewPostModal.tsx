@@ -13,7 +13,8 @@ import {Comment} from "../post/Comment";
 import useWindowDimensions from "../../hooks/useWindowDimensions";
 import {AddComment} from "../post/AddComment";
 import PerfectScrollBar from "react-perfect-scrollbar"
-import {StarBorderOutlined, StarOutlined} from "@material-ui/icons";
+import {QuestionAnswerOutlined, SendOutlined, StarBorderOutlined, StarOutlined} from "@material-ui/icons";
+import {DirectMessageIcon} from "../shared/Icons";
 
 
 const HeaderDivider = styled(Divider)`
@@ -96,6 +97,19 @@ export function ViewPostModal(props: Props) {
         return Math.round(Math.max(imageHeight, height * 0.25) - 90);
     }
 
+    function handleLikeClick() {
+        if (postDetail.isLiked) {
+            Axios.post(`posts/unlike/${postDetail.postId}`).then(response => {
+                setPostDetail({...postDetail, isLiked: false, numberOfLikes: postDetail.numberOfLikes - 1})
+            })
+        }
+        else {
+            Axios.post(`posts/like/${postDetail.postId}`).then(response => {
+                setPostDetail({...postDetail, isLiked: true, numberOfLikes: postDetail.numberOfLikes + 1})
+            })
+        }
+    }
+
     return (
         <PostDialog open={props.open} onClose={props.onClose} onEnter={onOpen} maxWidth="lg" fullWidth>
             <Card style={{minHeight: "25vh"}}>
@@ -128,7 +142,12 @@ export function ViewPostModal(props: Props) {
                                 <CommentList />
                             </CommentGridItem>
                         </PerfectScrollBar>
-
+                        <Grid item xs={12}>
+                            <HeartIcon size={24} isLiked={postDetail.isLiked} onClick={handleLikeClick}/>
+                            <QuestionAnswerOutlined style={{fontSize: 24}}/>
+                            <SendOutlined style={{fontSize: 24}}/>
+                            <DirectMessageIcon filled={false}></DirectMessageIcon>
+                        </Grid>
                         <Grid item xs={12}>
                             <AddComment postId={postDetail.postId} onCommentAdded={() => getCommentList(postDetail.postId)}/>
                         </Grid>

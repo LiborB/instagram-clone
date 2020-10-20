@@ -5,7 +5,7 @@ import styled from "styled-components";
 import {Icon, SvgIconProps} from "@material-ui/core";
 
 interface StyleProps {
-    size?: "small" | "medium"
+    size?: "small" | "medium" | number
 }
 
 const Outlined = styled(FavoriteBorderOutlined)<StyleProps>`
@@ -18,12 +18,12 @@ const Filled = styled(Favorite)<StyleProps>`
   margin-right: 10px;
   cursor: pointer;
   color: red;
-  font-size: ${props => props.size === "small" ? "18px" : "1.5em"};
+  font-size: ${props => props.size === "small" ? "18px" : props.size === "medium" ? "1.5em" : props.size ? props.size + "px" : "1.5em"};
 `
 
 interface Props extends SvgIconProps{
     isLiked: boolean,
-    size?: "small" | "medium"
+    size?: "small" | "medium" | number
 };
 
 export function HeartIcon(props: Props) {

@@ -96,7 +96,7 @@ namespace tradeus.Controllers
         public ActionResult<PostDetail> GetPostDetail(int postId)
         {
             var user = HandleTokenReturnUser();
-            var post = _context.Posts.First(x => x.PostId == postId);
+            var post = _context.Posts.Include(x => x.Creator).First(x => x.PostId == postId);
             var dataFolder = Path.Combine(_hostingEnvironment.ContentRootPath, "Data");
             var file = System.IO.File.ReadAllBytes(Path.Combine(dataFolder, post.FileName));
             var postDetail = new PostDetail()

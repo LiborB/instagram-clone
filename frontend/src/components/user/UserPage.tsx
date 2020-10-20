@@ -91,6 +91,7 @@ export function UserPage(props: Props) {
     const [profileInfo, setProfileInfo] = useState(new UserProfileInfo());
     const [openPostId, setOpenPostId] = useState(0);
     useEffect(() => {
+        let isCancelled = false;
         Axios.get<UserProfileInfo>(`user/getprofileinfo/${props.username}`).then(response => {
             for (let i = 0; i < response.data.postDetailSimples.length; i++){
                 let x = response.data.postDetailSimples[i];
@@ -98,12 +99,18 @@ export function UserPage(props: Props) {
                 image.onload = () => {
                     x.aspectRatio = image.width / image.height;
                     if (i === response.data.postDetailSimples.length - 1) {
-                        setProfileInfo(response.data);
+                        if (!isCancelled) {
+                            setProfileInfo(response.data);
+
+                        }
                     }
                 }
                 image.src = x.imageBase64;
             }
         })
+        return () => {
+            isCancelled = true;
+        }
     }, [props.username])
 
     function followClick() {
