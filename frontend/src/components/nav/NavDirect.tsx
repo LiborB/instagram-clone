@@ -17,16 +17,17 @@ function NavDirect(props: Props) {
 	const icon = () => {
 		if (location.pathname === "/direct") {
 			return (
-				<DirectMessageIcon filled={true}></DirectMessageIcon>
+				<DirectMessageIcon filled={true}/>
 			);
 		} else {
-			return <SendOutlined className={props.className}></SendOutlined>;
+			return <DirectMessageIcon filled={false}/>;
 		}
 	};
 	return (
 		<>
 			<IconButton
-				style={{ marginRight: 10 }}
+				disableRipple
+				style={{ marginRight: 10, backgroundColor: "transparent" }}
 				size="small"
 				onClick={handleClick}
 			>

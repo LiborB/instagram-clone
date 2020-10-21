@@ -28,8 +28,8 @@ namespace tradeus
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddControllers();
-            services.AddDbContext<TradeusDbContext>(options => options.UseSqlServer(@"Server=DESKTOP-662BOTM\SQLEXPRESS;Database=instaclone;Trusted_Connection=True;MultipleActiveResultSets=true"));
-            // services.AddDbContext<TradeusDbContext>(options => options.UseSqlServer(@"Server=DESKTOP-E1IM2SR;Database=instaclone;Trusted_Connection=True;MultipleActiveResultSets=true"));
+            // services.AddDbContext<TradeusDbContext>(options => options.UseSqlServer(@"Server=DESKTOP-662BOTM\SQLEXPRESS;Database=instaclone;Trusted_Connection=True;MultipleActiveResultSets=true"));
+            services.AddDbContext<TradeusDbContext>(options => options.UseSqlServer(@"Server=DESKTOP-E1IM2SR;Database=instaclone;Trusted_Connection=True;MultipleActiveResultSets=true"));
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

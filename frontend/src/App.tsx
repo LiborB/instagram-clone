@@ -57,6 +57,7 @@ function App() {
                 <NavBar position="static" variant="outlined">
                     <Toolbar className="nav-toolbar">
                         <Typography
+                            color="textPrimary"
                             className="logo"
                             onClick={() => router.push("/home")}
                             variant="h6"

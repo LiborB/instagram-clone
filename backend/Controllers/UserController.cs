@@ -168,5 +168,57 @@ namespace tradeus.Controllers
             userProfileInfo.UserId = userEntity.UserId;
             return Ok(userProfileInfo);
         }
+
+        [Route("getrecentactivity")]
+        [HttpGet]
+        public ActionResult GetRecentActivity()
+        {
+            var user = HandleTokenReturnUser();
+            var recentFollows = _context.UserFollowings.Where(x => x.FollowingId == user.UserId).Take(10)
+                .OrderByDescending(x => x.Created).Select(x => new RecentItem()
+                {
+                    Created = x.Created,
+                    Username = x.User.Username,
+                    RecentActivityItemType = RecentActivityItemType.Follow
+                }).ToList();
+            var recentPostLikes = _context.PostLikes.Where(x => x.Post.CreatorId == user.UserId && x.UserId != user.UserId).Take(10)
+                .OrderByDescending(x => x.Created).Select(x => new RecentItem()
+                {
+                    Created = x.Created,
+                    Username = x.User.Username,
+                    PostId = x.PostId,
+                    RecentActivityItemType = RecentActivityItemType.PostLike
+                }).ToList();
+            var recentCommentLikes = _context.CommentLikes.Where(x => x.PostComment.Post.CreatorId == user.UserId && x.UserId != user.UserId)
+                .Take(10).OrderByDescending(x => x.Created).Select(x => new RecentItem()
+                {
+                    Created = x.Created,
+                    Username = x.User.Username,
+                    RecentActivityItemType = RecentActivityItemType.CommentLike
+                }).ToList();
+            var recentActivity = new RecentActivityItem
+            {
+                RecentItems = recentFollows.Concat(recentPostLikes).Concat(recentCommentLikes)
+                    .OrderByDescending(x => x.Created).Take(10).ToList()
+            };
+            var recentFollowsDate = recentFollows.FirstOrDefault()?.Created ?? DateTime.MinValue;
+            var recentPokeLikesDate = recentPostLikes.FirstOrDefault()?.Created ?? DateTime.MinValue;
+            var recentCommentLikesDate = recentCommentLikes.FirstOrDefault()?.Created ?? DateTime.MinValue;
+            var latest = Math.Max(Math.Max(recentFollowsDate.Ticks, recentPokeLikesDate.Ticks),
+                recentCommentLikesDate.Ticks);
+            recentActivity.ViewedRecentNotifications =
+                user.LastViewedNotification.Ticks > latest || latest == DateTime.MinValue.Ticks;
+            return Ok(recentActivity);
+        }
+
+        [Route("updateviewedrecentdate")]
+        [HttpPost]
+        public ActionResult UpdateViewedRecentDate()
+        {
+            var user = HandleTokenReturnUser();
+            user.LastViewedNotification = DateTime.UtcNow;
+            _context.SaveChanges();
+            return Ok();
+        }
     }
 }

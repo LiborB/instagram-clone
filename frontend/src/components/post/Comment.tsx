@@ -3,7 +3,7 @@ import * as React from 'react';
 import {Box, Grid, GridProps} from "@material-ui/core";
 import PostCommentDetail from "../../models/PostCommentDetail";
 import {Username} from "../user/Username";
-import {HeartIcon} from "./HeartIcon";
+import {HeartIcon} from "../shared/Icons";
 import {useEffect, useState} from "react";
 import Axios from "axios";
 import {CommentDescription} from "../styled/custom-styles";
@@ -57,7 +57,7 @@ export function Comment(props: Props) {
                 <CommentDescription>&nbsp;{props.postCommentDetail.commentBody}</CommentDescription>
             </GridComment>
             <Grid item xs={1}>
-                {!props.postCommentDetail.isSelfComment && <Box position="relative" top="10px"><HeartIcon size="small" onClick={handleClick} isLiked={props.postCommentDetail.isLiked}/></Box>}
+                {!props.postCommentDetail.isSelfComment && <Box position="relative" top="10px"><HeartIcon style={{cursor: "pointer"}} width={12} height={12} onClick={handleClick} filled={props.postCommentDetail.isLiked}/></Box>}
 
             </Grid>
             <Grid item xs={12}>

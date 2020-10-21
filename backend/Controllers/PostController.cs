@@ -14,11 +14,8 @@ namespace tradeus.Controllers
     [ApiController]
     public class PostController : BaseApiController
     {
-        private IWebHostEnvironment _hostingEnvironment;
-
         public PostController(TradeusDbContext context, IWebHostEnvironment env) : base(context, env)
         {
-            _hostingEnvironment = env;
         }
 
         [Route("upload")]

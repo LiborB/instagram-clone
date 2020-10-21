@@ -8,7 +8,7 @@ import PostCommentDetail from "../../models/PostCommentDetail";
 import styled from "styled-components";
 import {CommentDescription} from "../styled/custom-styles";
 import {Username} from "../user/Username";
-import {HeartIcon} from "../post/HeartIcon";
+import {HeartIcon, MessageIcon} from "../shared/Icons";
 import {Comment} from "../post/Comment";
 import useWindowDimensions from "../../hooks/useWindowDimensions";
 import {AddComment} from "../post/AddComment";
@@ -28,7 +28,7 @@ border-radius: 0;
 `
 
 const GridContainer = styled(Grid)`
-margin-bottom: -10px;
+//
 `
 
 const CommentGridItem = styled(Grid)`
@@ -42,7 +42,8 @@ font-weight: 600;
 
 interface Props extends DialogProps {
     postDetail?: PostDetail,
-    postId?: number
+    postId?: number,
+    onLikeChange?: (liked: boolean) => void;
 };
 
 export function ViewPostModal(props: Props) {
@@ -94,24 +95,30 @@ export function ViewPostModal(props: Props) {
     }
 
     function getMaxHeight() {
-        return Math.round(Math.max(imageHeight, height * 0.25) - 90);
+        return Math.round(Math.max(imageHeight, height * 0.25) - 152);
     }
 
     function handleLikeClick() {
         if (postDetail.isLiked) {
             Axios.post(`posts/unlike/${postDetail.postId}`).then(response => {
-                setPostDetail({...postDetail, isLiked: false, numberOfLikes: postDetail.numberOfLikes - 1})
+                setPostDetail({...postDetail, isLiked: false, numberOfLikes: postDetail.numberOfLikes - 1});
+                if (props.onLikeChange) {
+                    props.onLikeChange(false);
+                }
             })
         }
         else {
             Axios.post(`posts/like/${postDetail.postId}`).then(response => {
-                setPostDetail({...postDetail, isLiked: true, numberOfLikes: postDetail.numberOfLikes + 1})
+                setPostDetail({...postDetail, isLiked: true, numberOfLikes: postDetail.numberOfLikes + 1});
+                if (props.onLikeChange) {
+                    props.onLikeChange(true);
+                }
             })
         }
     }
 
     return (
-        <PostDialog open={props.open} onClose={props.onClose} onEnter={onOpen} maxWidth="lg" fullWidth>
+        <PostDialog  open={props.open} onClose={props.onClose} onEnter={onOpen} maxWidth="lg" fullWidth>
             <Card style={{minHeight: "25vh"}}>
                 <GridContainer container spacing={1}>
                     <Grid container item xs={8} alignItems="center">
@@ -142,13 +149,14 @@ export function ViewPostModal(props: Props) {
                                 <CommentList />
                             </CommentGridItem>
                         </PerfectScrollBar>
-                        <Grid item xs={12}>
-                            <HeartIcon size={24} isLiked={postDetail.isLiked} onClick={handleLikeClick}/>
-                            <QuestionAnswerOutlined style={{fontSize: 24}}/>
-                            <SendOutlined style={{fontSize: 24}}/>
-                            <DirectMessageIcon filled={false}></DirectMessageIcon>
+                        <Divider style={{marginTop: 5, marginBottom: 5}}/>
+                        <Grid item xs={12} style={{marginTop: 10}}>
+                            <HeartIcon className="actionIcon" fontSize={24} filled={postDetail.isLiked} onClick={handleLikeClick}/>
+                            <MessageIcon className="actionIcon" filled={false}/>
+                            <DirectMessageIcon className="actionIcon" filled={false}/>
                         </Grid>
-                        <Grid item xs={12}>
+                        <Divider style={{marginTop: 5, marginBottom: 5}} />
+                        <Grid item xs={12} style={{paddingBottom: 10}}>
                             <AddComment postId={postDetail.postId} onCommentAdded={() => getCommentList(postDetail.postId)}/>
                         </Grid>
                     </Grid>

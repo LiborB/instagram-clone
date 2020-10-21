@@ -29,8 +29,9 @@ import {ViewPostModal} from "../home/ViewPostModal";
 import {SetPostUpdated} from "../../store/actions";
 import {Username} from "../user/Username";
 import {CommentDescription} from "../styled/custom-styles";
-import {HeartIcon} from "./HeartIcon";
+import {HeartIcon} from "../shared/Icons";
 import {AddComment} from "./AddComment";
+import {DirectMessageIcon, MessageIcon} from "../shared/Icons";
 
 interface Props {
     postDetail: PostDetail
@@ -119,9 +120,9 @@ export function PostListItem(props: Props) {
                 <img style={{width: "100%"}} src={props.postDetail.imageBase64}/>
             </Box>
             <Box pl={1} pr={1}>
-                <HeartIcon onClick={handleLikeClick} isLiked={postDetail.isLiked}/>
-                <QuestionAnswerOutlined className={classes.actionIcon}/>
-                <SendOutlined className={classes.actionIcon}/>
+                <HeartIcon className="actionIcon" width={24} height={24} onClick={handleLikeClick} filled={postDetail.isLiked}/>
+                <MessageIcon className="actionIcon" filled={false}/>
+                <DirectMessageIcon className="actionIcon" filled={false}/>
             </Box>
             <Box pl={1} pr={1} fontWeight={600} fontSize={14}>
                 {postDetail.numberOfLikes > 0 && <div>
@@ -151,7 +152,7 @@ export function PostListItem(props: Props) {
                 <Divider/>
             </Box>
             <AddComment pl={1} pr={1} postId={postDetail.postId} onCommentAdded={onCommentAdded}/>
-            <ViewPostModal postDetail={postDetail} open={open} onClose={() => setOpen(false)}/>
+            <ViewPostModal onLikeChange={(liked) => setPostDetail({...postDetail, isLiked: liked})} postDetail={postDetail} open={open} onClose={() => setOpen(false)}/>
         </Card>
     );
 };

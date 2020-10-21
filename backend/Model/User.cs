@@ -16,6 +16,7 @@ namespace tradeus.Model
         public DateTime Created { get; set; }
         [StringLength(256)]
         public string Token { get; set; }
+        public DateTime LastViewedNotification { get; set; }
         
         public virtual ICollection<Post> Posts { get; set; }
         public virtual ICollection<PostComment> PostComments { get; set; }

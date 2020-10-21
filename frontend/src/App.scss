@@ -22,3 +22,11 @@
 .logo {
 	cursor: pointer;
 }
+
+.actionIcon {
+	margin-right: 10px;
+	cursor: pointer;
+	&.filled {
+		color: red;
+	}
+}

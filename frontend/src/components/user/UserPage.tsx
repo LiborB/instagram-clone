@@ -93,19 +93,24 @@ export function UserPage(props: Props) {
     useEffect(() => {
         let isCancelled = false;
         Axios.get<UserProfileInfo>(`user/getprofileinfo/${props.username}`).then(response => {
-            for (let i = 0; i < response.data.postDetailSimples.length; i++){
-                let x = response.data.postDetailSimples[i];
-                let image = new Image()
-                image.onload = () => {
-                    x.aspectRatio = image.width / image.height;
-                    if (i === response.data.postDetailSimples.length - 1) {
-                        if (!isCancelled) {
-                            setProfileInfo(response.data);
+            if (response.data.postDetailSimples.length) {
+                for (let i = 0; i < response.data.postDetailSimples.length; i++){
+                    let x = response.data.postDetailSimples[i];
+                    let image = new Image()
+                    image.onload = () => {
+                        x.aspectRatio = image.width / image.height;
+                        if (i === response.data.postDetailSimples.length - 1) {
+                            if (!isCancelled) {
+                                setProfileInfo(response.data);
 
+                            }
                         }
                     }
+                    image.src = x.imageBase64;
                 }
-                image.src = x.imageBase64;
+            }
+            else {
+                setProfileInfo(response.data);
             }
         })
         return () => {
@@ -147,7 +152,7 @@ export function UserPage(props: Props) {
 
     return <>{isLoaded() ? <Container>
         <UsernameRow>{profileInfo.username}
-            {!profileInfo.isFollowing && <Button onClick={followClick}>Follow</Button>}
+            {!profileInfo.isFollowing && <Button disableElevation style={{marginLeft: 20}} variant="contained" color="primary" onClick={followClick}>Follow</Button>}
         </UsernameRow>
         <OverviewRow>
             <div><Number>{profileInfo.numberOfPosts}</Number> posts</div>
